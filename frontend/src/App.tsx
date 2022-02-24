@@ -5,7 +5,7 @@ import './App.css';
 const endpoint: string = "http://localhost:64000";
 
 interface DirectoryProps {
-  absolutePath: string;
+  filePath: string;
   files: string[];
 }
 
@@ -16,14 +16,14 @@ interface FileInfo {
 interface DirectoryState {
   initializing: boolean;
   initialized: boolean;
-  absolutePath: string;
+  filePath: string;
   files: FileInfo[];
   collapsed: boolean;
 }
 
 function Directory(props: DirectoryProps) {
   const [state, setState] = useState({
-    absolutePath: props.absolutePath,
+    filePath: props.filePath,
     files: [],
     collapsed: false,
     initializing: false,
@@ -37,7 +37,7 @@ function Directory(props: DirectoryProps) {
       initializing: true,
       initialized: false
     }));
-    fetch(endpoint + "/directories/" + state.absolutePath.replaceAll("/", "%2F"))
+    fetch(endpoint + "/directories/" + state.filePath.replaceAll("/", "%2F"))
       .then((res) => res.json())
       .then((res) => {
         setState((prevState) => ({
@@ -72,7 +72,7 @@ function Directory(props: DirectoryProps) {
 
   const directoryContent = <div className={contentClassName}><ul>{listItems}</ul></div>;
 
-  const directoryTitle = <div className="App-directory-title">{state.absolutePath} {buttonElement}</div>;
+  const directoryTitle = <div className="App-directory-title">{state.filePath} {buttonElement}</div>;
 
   return <div className="App-directory">{directoryTitle}{directoryContent}</div>;
 }
@@ -110,7 +110,7 @@ function Directories(props: any) {
   }
 
   const elements = state.directories.map((directory) => {
-      return <Directory absolutePath={directory} files={[]}/>
+      return <Directory filePath={directory} files={[]}/>
       });
 
   // Sadly, HTML tags <marquee> and <blink> don't exist in ReactJS :-(

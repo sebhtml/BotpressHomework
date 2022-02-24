@@ -23,9 +23,9 @@ app.get("/directories", (req: express.Request, res: express.Response) => {
 });
 
 app.get('/directories/:path', (req, res) => {
-  const absolutePath: string = req.params.path;
+  const filePath: string = req.params.path;
 
-  fs.readdir(absolutePath, (err, files) => {
+  fs.readdir(filePath, (err, files) => {
     if (err) {
       return console.log("unable to read directory " + err);
     }
@@ -35,7 +35,7 @@ app.get('/directories/:path', (req, res) => {
     }));
 
     res.write(JSON.stringify({
-      absolutePath: absolutePath,
+      filePath: filePath,
       files: fileData
     }));
 
