@@ -63,11 +63,11 @@ function Directory(props: DirectoryProps) {
 
   const buttonElement = <button onClick={toggle}>[Collapse/Uncollapse]</button>;
 
-  const directoryContent = <div>{buttonElement}<ul className={
+  const directoryContent = <div><ul className={
     state.collapsed ? "App-directory-content-hidden" : "App-directory-content-not-hidden"
     }>{listItems}</ul></div>;
 
-  return <div className="App-directory"><h1>{props.absolutePath}</h1>{directoryContent}</div>;
+  return <div className="App-directory"><div>{props.absolutePath} {buttonElement}</div>{directoryContent}</div>;
 }
 
 interface DirectoriesState{
@@ -105,7 +105,13 @@ function Directories(props: any) {
   const elements = state.directories.map((directory) => {
       return <Directory absolutePath={directory} files={[]}/>
       });
-  return <div>{elements}</div>;
+
+  // Sadly, HTML tags <marquee> and <blink> don't exist in ReactJS :-(
+  const important = <div><div >IMPORTANT !</div></div>;
+  const docker = <div>This cloud-scale app is implemented with micro-services with Docker !</div>;
+  const reactMessage = <div><u><b>This is a very good looking UI done in ReactJS !</b></u></div>;
+
+  return <div>{important}{docker}{reactMessage}<div>{elements}</div></div>;
 }
 
 function App() {
