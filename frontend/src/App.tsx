@@ -33,7 +33,7 @@ function Directory(props: DirectoryProps) {
       initializing: true,
       initialized: false
     }));
-    fetch(endpoint + "/directories/" + state.absolutePath.replace("/", "%2F"))
+    fetch(endpoint + "/directories/" + state.absolutePath.replaceAll("/", "%2F"))
       .then((res) => res.json())
       .then((res) => {
         setState((prevState) => ({
