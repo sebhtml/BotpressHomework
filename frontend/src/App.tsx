@@ -7,12 +7,38 @@ interface DirectoryProps {
   files: string[];
 }
 
+interface DirectoryState {
+  absolutePath: string;
+  files: string[];
+  collapsed: boolean;
+}
+
 function Directory(props: DirectoryProps) {
-  const listItems = props.files.map((filename) =>
+  const [state, setState] = useState({
+    absolutePath: props.absolutePath,
+    files: props.files,
+    collapsed: false
+  });
+
+  const listItems = state.collapsed ? "" : state.files.map((filename) =>
     <li>{filename}</li>
     );
 
-  return <div><h1>{props.absolutePath}</h1><ul>{listItems}</ul></div>;
+  const toggle = (e: React.MouseEvent<HTMLElement>) => {
+    e.preventDefault();
+    setState((prevState) => ({
+      ...prevState,
+      collapsed: !prevState.collapsed
+    }));
+  };
+
+  const buttonElement = <button onClick={toggle}>[Collapse/Uncollapse]</button>;
+
+  const directoryContent = <div>{buttonElement}<ul className={
+    state.collapsed ? "App-directory-content-hidden" : "App-directory-content-not-hidden"
+    }>{listItems}</ul></div>;
+
+  return <div className="App-directory"><h1>{props.absolutePath}</h1>{directoryContent}</div>;
 }
 
 interface DirectoriesState{

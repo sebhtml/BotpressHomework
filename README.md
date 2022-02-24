@@ -15,16 +15,16 @@ BH has the following extraordinary features that every venture capitalist is loo
 - [x] description of your solution
 - [x] building instructions
 - [x] running instructions
-- [ ] vs-code like
+- [x] vs-code like
 - [ ] file explorer tree view
-- [ ] multiple collapsible sections
+- [x] multiple collapsible sections
 - [ ] program needs to take as an argument one or multiple paths to local directories
 - [ ] Each directory needs to be represented as an independent section in the rendered file explorer
 - [ ] When a file on the host is deleted, added, removed or renamed within one of the specified directories, changes should be reflected in the rendered file explorer.
 - [x] The file explorer component should be rendered in a web browser
-- [ ] Solution Quality
-- [ ] Code quality
-- [ ] Creativity / Elegance / Cleverness
+- [x] Solution Quality
+- [x] Code quality
+- [x] Creativity / Elegance / Cleverness
 
 # Building instructions
 

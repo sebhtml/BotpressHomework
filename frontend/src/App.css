@@ -36,3 +36,21 @@
     transform: rotate(360deg);
   }
 }
+
+.App-directory {
+  background: yellow;
+  border-style: double;
+  padding: 20px;
+  margin: 20px;
+}
+
+.App-directory-content-not-hidden {
+  display: block;
+  overflow: hidden;
+}
+
+.App-directory-content-hidden {
+  display: none;
+  overflow: hidden;
+}
+
