@@ -49,7 +49,7 @@ cd ..
 # Running instructions
 
 ```bash
-docker run -d -p 64000:4000 sebhtml/file-explorer-backend:v1
+docker run -d -p 64000:4000 -v ~/BotpressHomework:/BotpressHomeworkProject sebhtml/file-explorer-backend:v1
 docker run -d -p 63000:3000 sebhtml/file-explorer-frontend:v1
 firefox http://localhost:63000/
 ```

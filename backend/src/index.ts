@@ -1,7 +1,13 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
+import fs from 'fs';
 
 const app = express()
+
+interface FileInfo {
+  fileName: string
+};
 
 app.use(
   cors({
@@ -18,14 +24,25 @@ app.get("/directories", (req: express.Request, res: express.Response) => {
 
 app.get('/directories/:path', (req, res) => {
   const absolutePath: string = req.params.path;
-  res.write(JSON.stringify({
-    absolutePath: absolutePath,
-    files: ["Bot.ts", "Api.ts", "Frontend.ts"]
-  }));
-  res.end();
+
+  fs.readdir(absolutePath, (err, files) => {
+    if (err) {
+      return console.log("unable to read directory " + err);
+    }
+
+    const fileData: FileInfo[] = files.map((file) => ({
+      fileName: file
+    }));
+
+    res.write(JSON.stringify({
+      absolutePath: absolutePath,
+      files: fileData
+    }));
+
+    res.end();
+  });
 });
 
 app.listen(4000, () => {
-  console.log("Listening on port");
 });
 

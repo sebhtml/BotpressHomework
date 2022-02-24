@@ -1,5 +1,6 @@
 FROM node:16
 WORKDIR /usr/src/app
+RUN mkdir /BotpressHomeworkProject
 
 COPY package.json ./
 COPY package-lock.json ./
@@ -12,5 +13,6 @@ COPY . ./
 RUN tsc
 
 EXPOSE 4000
-CMD ["node", "src/index.js", "../frontend/", "../frontend/src/", "../backend/", "../backend/src/"]
+
+CMD ["node", "src/index.js", "/BotpressHomeworkProject/backend", "/BotpressHomeworkProject/frontend", "/proc", "./src", "/sys", "/etc"]
 

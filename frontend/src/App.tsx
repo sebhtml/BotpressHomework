@@ -9,11 +9,15 @@ interface DirectoryProps {
   files: string[];
 }
 
+interface FileInfo {
+  fileName: string,
+};
+
 interface DirectoryState {
   initializing: boolean;
   initialized: boolean;
   absolutePath: string;
-  files: string[];
+  files: FileInfo[];
   collapsed: boolean;
 }
 
@@ -49,9 +53,10 @@ function Directory(props: DirectoryProps) {
 
 
 
-  const listItems = state.collapsed ? "" : state.files.map((filename) =>
-    <li>{filename}</li>
-    );
+  const listItems = state.collapsed ? "" : state.files.map((fileInfo: FileInfo) => {
+    const fileName = fileInfo.fileName;
+    return <li>{fileName}</li>
+  });
 
   const toggle = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
