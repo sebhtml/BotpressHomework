@@ -11,7 +11,7 @@ app.use(
 
 app.get("/directories", (req: express.Request, res: express.Response) => {
   res.write(JSON.stringify({
-    directories: process.argv.splice(2)
+    directories: [...process.argv].splice(2)
   }));
   res.end();
 });
