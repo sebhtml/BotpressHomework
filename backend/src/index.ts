@@ -10,10 +10,8 @@ interface FileInfo {
 };
 
 app.use(
-  cors({
-    origin: "http://localhost:63000"
-  }
-));
+  cors()
+);
 
 app.get("/directories", (req: express.Request, res: express.Response) => {
   res.write(JSON.stringify({
