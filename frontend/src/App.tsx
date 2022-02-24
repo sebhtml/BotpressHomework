@@ -5,17 +5,21 @@ import './App.css';
 const endpoint: string = "http://localhost:64000";
 
 interface DirectoryProps {
+  prefixPath: string;
   filePath: string;
   files: string[];
 }
 
+// TODO: move FileInfo to a common module and use import it in the frontend and backend.
 interface FileInfo {
   fileName: string,
+  isDirectory: boolean
 };
 
 interface DirectoryState {
   initializing: boolean;
   initialized: boolean;
+  prefixPath: string;
   filePath: string;
   files: FileInfo[];
   collapsed: boolean;
@@ -23,12 +27,16 @@ interface DirectoryState {
 
 function Directory(props: DirectoryProps) {
   const [state, setState] = useState({
+    prefixPath: props.prefixPath,
     filePath: props.filePath,
     files: [],
-    collapsed: false,
+    collapsed: true,
     initializing: false,
     initialized: false
   });
+
+  // TODO use path.join
+  const directoryPath = state.prefixPath + "/" + state.filePath;
 
   // Fetch state from backend.
   if (!state.initialized && !state.initializing) {
@@ -37,7 +45,9 @@ function Directory(props: DirectoryProps) {
       initializing: true,
       initialized: false
     }));
-    fetch(endpoint + "/directories/" + state.filePath.replaceAll("/", "%2F"))
+
+    // TODO use path.join
+    fetch(endpoint + "/directories/" + encodeURIComponent(directoryPath))
       .then((res) => res.json())
       .then((res) => {
         setState((prevState) => ({
@@ -55,6 +65,11 @@ function Directory(props: DirectoryProps) {
 
   const listItems = state.collapsed ? "" : state.files.map((fileInfo: FileInfo) => {
     const fileName = fileInfo.fileName;
+    const isDir: boolean = fileInfo.isDirectory;
+
+    if (isDir) {
+      return <li><Directory prefixPath={directoryPath} filePath={fileName} files={[]}/></li>;
+    }
     return <li>{fileName}</li>
   });
 
@@ -110,7 +125,7 @@ function Directories(props: any) {
   }
 
   const elements = state.directories.map((directory) => {
-      return <Directory filePath={directory} files={[]}/>
+      return <Directory prefixPath={""} filePath={directory} files={[]}/>
       });
 
   // Sadly, HTML tags <marquee> and <blink> don't exist in ReactJS :-(

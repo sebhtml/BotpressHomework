@@ -16,7 +16,7 @@ BH has the following extraordinary features that every venture capitalist is loo
 - [x] building instructions
 - [x] running instructions
 - [x] vs-code like
-- [ ] file explorer tree view
+- [x] file explorer tree view
 - [x] multiple collapsible sections
 - [x] program needs to take as an argument one or multiple paths to local directories
 - [x] Each directory needs to be represented as an independent section in the rendered file explorer

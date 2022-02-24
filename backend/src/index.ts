@@ -5,8 +5,10 @@ import fs from 'fs';
 
 const app = express()
 
+// TODO: move FileInfo to a common module and use import it in the frontend and backend.
 interface FileInfo {
-  fileName: string
+  fileName: string,
+  isDirectory: boolean
 };
 
 app.use(
@@ -29,7 +31,8 @@ app.get('/directories/:path', (req, res) => {
     }
 
     const fileData: FileInfo[] = files.map((file) => ({
-      fileName: file
+      fileName: file,
+      isDirectory: fs.lstatSync(path.join(filePath, file)).isDirectory()
     }));
 
     res.write(JSON.stringify({
