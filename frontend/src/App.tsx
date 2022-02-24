@@ -2,12 +2,16 @@ import React, { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+const endpoint: string = "http://localhost:64000";
+
 interface DirectoryProps {
   absolutePath: string;
   files: string[];
 }
 
 interface DirectoryState {
+  initializing: boolean;
+  initialized: boolean;
   absolutePath: string;
   files: string[];
   collapsed: boolean;
@@ -16,9 +20,34 @@ interface DirectoryState {
 function Directory(props: DirectoryProps) {
   const [state, setState] = useState({
     absolutePath: props.absolutePath,
-    files: props.files,
-    collapsed: false
+    files: [],
+    collapsed: false,
+    initializing: false,
+    initialized: false
   });
+
+  // Fetch state from backend.
+  if (!state.initialized && !state.initializing) {
+    setState((prevState) => ({
+      ...prevState,
+      initializing: true,
+      initialized: false
+    }));
+    fetch(endpoint + "/directories/" + state.absolutePath.replace("/", "%2F"))
+      .then((res) => res.json())
+      .then((res) => {
+        setState((prevState) => ({
+          ...prevState,
+          initializing: false,
+          initialized: true,
+          files: res.files
+          }));
+      }, (err) => {
+        // TODO display an error
+      });
+  }
+
+
 
   const listItems = state.collapsed ? "" : state.files.map((filename) =>
     <li>{filename}</li>
@@ -50,13 +79,14 @@ interface DirectoriesState{
 function Directories(props: any) {
   const [state, setState] = useState({initializing: false, initialized: false, directories: []});
 
+  // Fetch state from backend.
   if (!state.initialized && !state.initializing) {
     setState({
       initializing: true,
       initialized: false,
       directories: []
     });
-    fetch("http://localhost:64000/directories")
+    fetch(endpoint + "/directories")
       .then((response) => {
         const payload = response.json();
         return payload;
@@ -73,7 +103,7 @@ function Directories(props: any) {
   }
 
   const elements = state.directories.map((directory) => {
-      return <Directory absolutePath={directory} files={["a.txt", "b.txt", "c.txt"]} />
+      return <Directory absolutePath={directory} files={[]}/>
       });
   return <div>{elements}</div>;
 }
