@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if $(docker ps | grep sebhtml | wc -l ) -gt 1
+if test $(docker ps | grep sebhtml | wc -l ) -gt 1
 then
   docker kill $(docker ps | grep "sebhtml/file-explorer"|awk '{print $1}')
 fi
