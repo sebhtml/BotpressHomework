@@ -1,29 +1,8 @@
 import React, { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
-
-const endpoint: string = "http://localhost:64000";
-
-interface DirectoryProps {
-  prefixPath: string;
-  filePath: string;
-  files: string[];
-}
-
-// TODO: move FileInfo to a common module and use import it in the frontend and backend.
-interface FileInfo {
-  fileName: string,
-  isDirectory: boolean
-};
-
-interface DirectoryState {
-  initializing: boolean;
-  initialized: boolean;
-  prefixPath: string;
-  filePath: string;
-  files: FileInfo[];
-  collapsed: boolean;
-}
+import { DirectoryProps, FileInfo, DirectoryState } from './Directory'
+import { endpoint } from './endpoint'
 
 function Directory(props: DirectoryProps) {
   const [state, setState] = useState({
@@ -93,6 +72,7 @@ function Directory(props: DirectoryProps) {
 
   return <div>{directoryTitle}{directoryContent}</div>;
 }
+
 
 interface DirectoriesState{
   initializing: boolean;
