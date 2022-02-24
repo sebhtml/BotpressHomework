@@ -37,12 +37,13 @@
   }
 }
 
-.App-directory {
+.App-directory-panel {
   background: pink;
   border-style: double;
   padding: 0px;
   margin: 10px;
 }
+
 .App-directory-content {
   background: yellow;
   border-style: dashed;
@@ -61,10 +62,9 @@
 }
 
 .App-directory-title {
-  text-decoration: underline red double;
+  text-decoration: underline red;
   background: teal;
   border: 5px solid purple;
-  font-size: xxx-large;
   margin: 2px;
   padding: 0px;
 }

@@ -81,15 +81,17 @@ function Directory(props: DirectoryProps) {
     }));
   };
 
-  const buttonElement = <button onClick={toggle}>[Collapse/Uncollapse]</button>;
+  const buttonText: string = state.collapsed ? "+" : "-";
+
+  const buttonElement = <button onClick={toggle}>{buttonText}</button>;
 
   const contentClassName = state.collapsed ? "App-directory-content-hidden" : "App-directory-content-not-hidden";
 
   const directoryContent = <div className={contentClassName}><ul>{listItems}</ul></div>;
 
-  const directoryTitle = <div className="App-directory-title">{state.filePath} {buttonElement}</div>;
+  const directoryTitle = <div>{buttonElement} {state.filePath}</div>;
 
-  return <div className="App-directory">{directoryTitle}{directoryContent}</div>;
+  return <div>{directoryTitle}{directoryContent}</div>;
 }
 
 interface DirectoriesState{
@@ -125,7 +127,7 @@ function Directories(props: any) {
   }
 
   const elements = state.directories.map((directory) => {
-      return <Directory prefixPath={""} filePath={directory} files={[]}/>
+      return <div className="App-directory-panel"><Directory prefixPath={""} filePath={directory} files={[]}/></div>;
       });
 
   // Sadly, HTML tags <marquee> and <blink> don't exist in ReactJS :-(
