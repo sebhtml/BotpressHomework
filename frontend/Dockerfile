@@ -10,6 +10,7 @@ RUN npm install -g serve
 COPY . ./
 RUN tsc
 RUN npm run build
+
 EXPOSE 3000
 CMD ["serve", "-s", "build"]
 
