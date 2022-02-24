@@ -38,9 +38,15 @@
 }
 
 .App-directory {
-  background: yellow;
+  background: pink;
   border-style: double;
-  padding: 20px;
+  padding: 0px;
+  margin: 10px;
+}
+.App-directory-content {
+  background: yellow;
+  border-style: dashed;
+  padding: 0px;
   margin: 20px;
 }
 
@@ -54,3 +60,16 @@
   overflow: hidden;
 }
 
+.App-directory-title {
+  text-decoration: underline red double;
+  background: teal;
+  border: 5px solid purple;
+  font-size: xxx-large;
+  margin: 2px;
+  padding: 0px;
+}
+
+.App-main {
+  margin: 30px;
+  padding: 10px;
+}
