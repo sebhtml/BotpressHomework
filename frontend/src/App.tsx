@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
@@ -15,22 +15,45 @@ function Directory(props: DirectoryProps) {
   return <div><h1>{props.absolutePath}</h1><ul>{listItems}</ul></div>;
 }
 
-interface DirectoriesProps {
-  directories: string[]
+interface DirectoriesState{
+  initializing: boolean;
+  initialized: boolean;
+  directories: string[];
 };
 
-function Directories(props: DirectoriesProps) {
-  //return <img />;
-  const elements = props.directories.map((directory) => {
+function Directories(props: any) {
+  const [state, setState] = useState({initializing: false, initialized: false, directories: []});
+
+  if (!state.initialized && !state.initializing) {
+    setState({
+      initializing: true,
+      initialized: false,
+      directories: []
+    });
+    fetch("http://localhost:64000/directories")
+      .then((response) => {
+        const payload = response.json();
+        return payload;
+      })
+      .then((response) => {
+        setState({
+          initializing: false,
+          initialized: true,
+          directories: response.directories
+          });
+      }, (err) => {
+        // TODO display an error
+      });
+  }
+
+  const elements = state.directories.map((directory) => {
       return <Directory absolutePath={directory} files={["a.txt", "b.txt", "c.txt"]} />
       });
   return <div>{elements}</div>;
-  /*
-  */
 }
 
 function App() {
-  return <Directories directories={["/boot", "/proc", "/home"]} />;
+  return <Directories />;
 }
 
 export default App;
