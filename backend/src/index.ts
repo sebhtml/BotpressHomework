@@ -44,6 +44,31 @@ app.get('/directories/:path', (req, res) => {
   });
 });
 
+
+app.get('/watch/:path', (req, res) => {
+
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.flushHeaders();
+
+  const filePath: string = req.params.path;
+
+  fs.watch(filePath, (event, fileName) => {
+    if (fileName) {
+      res.write(JSON.stringify({
+        filePath: filePath,
+        event: "changed!"
+      }));
+    }
+  });
+
+  res.on('close', () => {
+    res.end();
+  });
+
+});
+
 app.listen(4000, () => {
 });
 
