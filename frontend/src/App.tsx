@@ -25,19 +25,34 @@ function Directory(props: DirectoryProps) {
   });
 
   const directoryPath = makePath(state.prefixPath, state.filePath);
+  const directoryURIComponent = encodeURIComponent(directoryPath);
 
-  // Fetch state from backend.
-  useEffect(() => {
-    fetch(endpoint + "/directories/" + encodeURIComponent(directoryPath))
+  const fetchState = () => {
+    fetch(`${endpoint}/directories/${directoryURIComponent}`)
       .then((res) => res.json())
       .then((res) => {
+        console.log("Got response: " + JSON.stringify(res));
         setState((prevState) => ({
           ...prevState,
           files: res.files
           }));
       }, (err) => {
-        // TODO display an error
+        console.log("Failed to fetch directory state.");
       });
+  };
+
+  // Fetch initial state from backend.
+  useEffect(() => {
+    fetchState();
+  }, []);
+
+  // Listen to SSE events.
+  useEffect(() => {
+    const source = new EventSource(`${endpoint}/directories/${directoryURIComponent}/watch`);
+    source.onmessage = () => {
+      console.log("Received SSE event.");
+      fetchState();
+    };
   }, []);
 
   const listItems = state.collapsed ? "" : state.files.map((fileInfo: FileInfo) => {
@@ -94,7 +109,7 @@ function Directories(props: any) {
           directories: response.directories
           });
       }, (err) => {
-        // TODO display an error
+        console.log("Failed to fetch directories list.");
       });
   }, []);
 

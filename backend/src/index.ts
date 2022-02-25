@@ -47,19 +47,19 @@ app.get('/directories/:path', (req, res) => {
 
 app.get('/directories/:path/watch', (req, res) => {
 
+  const filePath: string = req.params.path;
+
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
-  res.setHeader('Access-Control-Allow-Origin', '*');
   res.flushHeaders();
-
-  const filePath: string = req.params.path;
 
   fs.watch(filePath, (event, fileName) => {
     if (fileName) {
-      res.write(JSON.stringify({
-        filePath: filePath,
-        event: "changed!"
-      }));
+      const data = {
+        filePath: filePath
+      };
+      // The \n\n is necessary to force a flush.
+      res.write(`data: ${JSON.stringify(data)}\n\n`);
     }
   });
 
