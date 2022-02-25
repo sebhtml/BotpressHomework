@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { DirectoryProps, FileInfo, DirectoryState } from './Directory'
@@ -21,35 +21,24 @@ function Directory(props: DirectoryProps) {
     prefixPath: props.prefixPath,
     filePath: props.filePath,
     files: [],
-    collapsed: true,
-    initializing: false,
-    initialized: false
+    collapsed: true
   });
 
   const directoryPath = makePath(state.prefixPath, state.filePath);
 
   // Fetch state from backend.
-  if (!state.initialized && !state.initializing) {
-    setState((prevState) => ({
-      ...prevState,
-      initializing: true,
-      initialized: false
-    }));
-
+  useEffect(() => {
     fetch(endpoint + "/directories/" + encodeURIComponent(directoryPath))
       .then((res) => res.json())
       .then((res) => {
         setState((prevState) => ({
           ...prevState,
-          initializing: false,
-          initialized: true,
           files: res.files
           }));
       }, (err) => {
         // TODO display an error
       });
-  }
-
+  }, []);
 
   const listItems = state.collapsed ? "" : state.files.map((fileInfo: FileInfo) => {
     const fileName = fileInfo.fileName;
@@ -84,19 +73,15 @@ function Directory(props: DirectoryProps) {
 
 
 interface DirectoriesState{
-  initializing: boolean;
-  initialized: boolean;
   directories: string[];
 };
 
 function Directories(props: any) {
-  const [state, setState] = useState({initializing: false, initialized: false, directories: []});
+  const [state, setState] = useState({directories: []});
 
   // Fetch state from backend.
-  if (!state.initialized && !state.initializing) {
+  useEffect(() => {
     setState({
-      initializing: true,
-      initialized: false,
       directories: []
     });
     fetch(endpoint + "/directories")
@@ -106,14 +91,12 @@ function Directories(props: any) {
       })
       .then((response) => {
         setState({
-          initializing: false,
-          initialized: true,
           directories: response.directories
           });
       }, (err) => {
         // TODO display an error
       });
-  }
+  }, []);
 
   const elements = state.directories.map((directory) => {
       return <div className="App-directory-panel"><Directory prefixPath={""} filePath={directory} files={[]}/></div>;
@@ -121,7 +104,7 @@ function Directories(props: any) {
 
   // Sadly, HTML tags <marquee> and <blink> don't exist in ReactJS :-(
   const important = <div><div >IMPORTANT !</div></div>;
-  const docker = <div>This cloud-scale app is implemented with micro-services with Docker by <a href="https://github.com/sebhtml">sebHTML</a> !</div>;
+  const docker = <div>This cloud-scale app is implemented with a micro-service with Docker by <a href="https://github.com/sebhtml">sebHTML</a> !</div>;
   const reactMessage = <div><u><b>This is a very good looking UI done in ReactJS !</b></u></div>;
   const directoryLists = state.directories.map((directory) => {
     return <li>{directory}</li>;

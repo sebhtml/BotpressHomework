@@ -14,8 +14,6 @@ interface FileInfo {
 };
 
 interface DirectoryState {
-  initializing: boolean;
-  initialized: boolean;
   prefixPath: string;
   filePath: string;
   files: FileInfo[];
