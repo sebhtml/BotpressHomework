@@ -45,7 +45,7 @@ app.get('/directories/:path', (req, res) => {
 });
 
 
-app.get('/watch/:path', (req, res) => {
+app.get('/directories/:path/watch', (req, res) => {
 
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
