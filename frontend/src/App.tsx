@@ -60,9 +60,9 @@ function Directory(props: DirectoryProps) {
     const isDir: boolean = fileInfo.isDirectory;
 
     if (isDir) {
-      return <li><Directory prefixPath={directoryPath} filePath={fileName} files={[]}/></li>;
+      return <li key={fileName}><Directory prefixPath={directoryPath} filePath={fileName} files={[]}/></li>;
     }
-    return <li>{fileName}</li>
+    return <li key={fileName}>{fileName}</li>
   });
 
   const toggle = (e: React.MouseEvent<HTMLElement>) => {
@@ -114,7 +114,7 @@ function Directories(props: any) {
   }, []);
 
   const elements = state.directories.map((directory) => {
-      return <div className="App-directory-panel"><Directory prefixPath={""} filePath={directory} files={[]}/></div>;
+      return <div key={directory} className="App-directory-panel"><Directory prefixPath={""} filePath={directory} files={[]}/></div>;
       });
 
   // Sadly, HTML tags <marquee> and <blink> don't exist in ReactJS :-(
@@ -122,7 +122,7 @@ function Directories(props: any) {
   const docker = <div>This cloud-scale app is implemented with a micro-service with Docker by <a href="https://github.com/sebhtml">sebHTML</a> !</div>;
   const reactMessage = <div><u><b>This is a very good looking UI done in ReactJS !</b></u></div>;
   const directoryLists = state.directories.map((directory) => {
-    return <li>{directory}</li>;
+    return <li key={directory}>{directory}</li>;
   });
 
   return <div className="App-main">{important}{docker}{reactMessage}<ol>{directoryLists}</ol><div>{elements}</div></div>;
