@@ -29,9 +29,10 @@ BH has the following extraordinary features that every venture capitalist is loo
 # REST API
 
 | *Resource* | *URN (Uniform Resource Name)* | *HTTP verb* | *Description* |
-| Directory | `/directories | GET | Get list of directories. |
-| Directory | `/directories/{directory} | GET | Get content of a directory. |
-| Directory | `/directories/{directory}/watch | GET | Watch changes in a directory. |
+| --- | --- | --- | --- |
+| Directory | `/directories` | GET | Get list of directories. |
+| Directory | `/directories/{directory}` | GET | Get content of a directory. |
+| Directory | `/directories/{directory}/watch` | GET | Watch changes in a directory using server sent events (SSE). |
 
 endpoint
 # Building instructions
