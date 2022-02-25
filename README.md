@@ -20,7 +20,7 @@ BH has the following extraordinary features that every venture capitalist is loo
 - [x] multiple collapsible sections
 - [x] program needs to take as an argument one or multiple paths to local directories
 - [x] Each directory needs to be represented as an independent section in the rendered file explorer
-- [ ] When a file on the host is deleted, added, removed or renamed within one of the specified directories, changes should be reflected in the rendered file explorer.
+- [x] When a file on the host is deleted, added, removed or renamed within one of the specified directories, changes should be reflected in the rendered file explorer.
 - [x] The file explorer component should be rendered in a web browser
 - [x] Solution Quality
 - [x] Code quality
