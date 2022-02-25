@@ -57,7 +57,7 @@ docker run -d -p 3000:3000 sebhtml/file-explorer-frontend:v1
 cd ..
 
 cd ..
-firefox http://localhost:63000/
+firefox http://localhost:3000/
 ```
 
 # Building and Running instructions
