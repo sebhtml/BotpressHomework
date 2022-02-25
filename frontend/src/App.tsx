@@ -52,10 +52,12 @@ function Directory(props: DirectoryProps) {
 
   // Listen to SSE events.
   useEffect(() => {
-    const source = new EventSource(`${endpoint}/directories/${directoryURIComponent}/watch`);
-    source.onmessage = () => {
-      setExpectedVersion(expectedVersion + 1);
-    };
+    if (props.watchDirectory) {
+      const source = new EventSource(`${endpoint}/directories/${directoryURIComponent}/watch`);
+      source.onmessage = () => {
+        setExpectedVersion(expectedVersion + 1);
+      };
+    }
   }, []);
 
   const listItems = state.collapsed ? "" : state.files.map((fileInfo: FileInfo) => {
@@ -63,7 +65,7 @@ function Directory(props: DirectoryProps) {
     const isDir: boolean = fileInfo.isDirectory;
 
     if (isDir) {
-      return <li key={fileName}><Directory prefixPath={directoryPath} filePath={fileName} files={[]}/></li>;
+      return <li key={fileName}><Directory prefixPath={directoryPath} filePath={fileName} files={[]} watchDirectory={false} /></li>;
     }
     return <li key={fileName}>{fileName}</li>
   });
@@ -117,7 +119,7 @@ function Directories(props: any) {
   }, []);
 
   const elements = state.directories.map((directory) => {
-      return <div key={directory} className="App-directory-panel"><Directory prefixPath={""} filePath={directory} files={[]}/></div>;
+      return <div key={directory} className="App-directory-panel"><Directory prefixPath={""} filePath={directory} files={[]} watchDirectory={true} /></div>;
       });
 
   // Sadly, HTML tags <marquee> and <blink> don't exist in ReactJS :-(
