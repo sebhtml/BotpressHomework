@@ -53,6 +53,7 @@ function Directory(props: DirectoryProps) {
   // Listen to SSE events.
   useEffect(() => {
     if (props.watchDirectory) {
+      // TODO it should work when a file C in A/B/C changed. Currently, only A is watched.
       const source = new EventSource(`${endpoint}/directories/${directoryURIComponent}/watch`);
       source.onmessage = () => {
         setExpectedVersion(expectedVersion + 1);

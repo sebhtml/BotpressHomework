@@ -14,5 +14,5 @@ RUN tsc
 
 EXPOSE 4000
 
-CMD ["node", "src/index.js", "/BotpressHomeworkProject/backend", "/BotpressHomeworkProject/frontend", "/proc", "./src", "/sys", "/etc"]
+CMD ["node", "src/index.js", "/BotpressHomeworkProject/backend", "/BotpressHomeworkProject/frontend", "/etc"]
 
