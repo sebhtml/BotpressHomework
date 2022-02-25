@@ -17,6 +17,7 @@ const makePath = (...pieces: string[]): string => {
 }
 
 function Directory(props: DirectoryProps) {
+
   const [state, setState] = useState({
     prefixPath: props.prefixPath,
     filePath: props.filePath,
@@ -24,14 +25,17 @@ function Directory(props: DirectoryProps) {
     collapsed: true
   });
 
+  const [actualVersion, setActualVersion] = useState(0);
+  const [expectedVersion, setExpectedVersion] = useState(actualVersion + 1);
+
   const directoryPath = makePath(state.prefixPath, state.filePath);
   const directoryURIComponent = encodeURIComponent(directoryPath);
 
   const fetchState = () => {
-    fetch(`${endpoint}/directories/${directoryURIComponent}`)
+    const path = `${endpoint}/directories/${directoryURIComponent}`;
+    fetch(path)
       .then((res) => res.json())
       .then((res) => {
-        console.log("Got response: " + JSON.stringify(res));
         setState((prevState) => ({
           ...prevState,
           files: res.files
@@ -41,17 +45,16 @@ function Directory(props: DirectoryProps) {
       });
   };
 
-  // Fetch initial state from backend.
-  useEffect(() => {
+  if (!state.collapsed && (actualVersion < expectedVersion)) {
     fetchState();
-  }, []);
+    setActualVersion(expectedVersion);
+  }
 
   // Listen to SSE events.
   useEffect(() => {
     const source = new EventSource(`${endpoint}/directories/${directoryURIComponent}/watch`);
     source.onmessage = () => {
-      console.log("Received SSE event.");
-      fetchState();
+      setExpectedVersion(expectedVersion + 1);
     };
   }, []);
 
