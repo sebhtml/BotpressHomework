@@ -1,4 +1,4 @@
 
-const endpoint: string = "http://localhost:64000";
+const endpoint: string = "http://localhost:4000";
 
 export { endpoint }
