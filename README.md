@@ -45,24 +45,38 @@ cd BotpressHomework
 # backend
 cd backend
 docker build . -t sebhtml/file-explorer-backend:v1
+docker run -d -p 4000:4000 \
+        -v ~/BotpressHomework:/BotpressHomeworkProject \
+        sebhtml/file-explorer-backend:v1
 cd ..
 
 # frontend
 cd frontend
 docker build . -t sebhtml/file-explorer-frontend:v1
+docker run -d -p 3000:3000 sebhtml/file-explorer-frontend:v1
 cd ..
 
 cd ..
+firefox http://localhost:63000/
 ```
 
-# Running instructions
+# Building and Running instructions
+
+Backend
 
 ```bash
-docker run -d -p 4000:4000 \
-	 -v ~/BotpressHomework:/BotpressHomeworkProject \
-	 sebhtml/file-explorer-backend:v1
+cd backend
+npm install
+tsc
+node src/index.js  ~/BotpressHomework ~/Pictures /etc
+```
 
-docker run -d -p 3000:3000 sebhtml/file-explorer-frontend:v1
-firefox http://localhost:63000/
+Frontend
+
+```bash
+cd frontend
+npm install
+tsc
+npm start
 ```
 
