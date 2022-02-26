@@ -3,7 +3,7 @@
 BotpressHomework (abbreviated "BH" thereafter) is an unique and innovative cloud-scale solution
 for watching your directories in the confort of a tab in your web browser.
 
-BH is developed with love on Debian GNU/Linux 11 (bullseye) using vim, docker, and Google Search.
+BH is developed with love on Debian GNU/Linux 11 (bullseye) using vim, Google Search, TypeScript, Node.js, ReactJS, and Docker.
 
 # REST API
 
