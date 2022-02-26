@@ -41,6 +41,8 @@ docker run -d -p 4000:4000 \
         -v ~/BotpressHomework:/BotpressHomeworkProject \
         sebhtml/file-explorer-backend:v1
 docker run -d -p 3000:3000 sebhtml/file-explorer-frontend:v1
+
+sleep 2
 firefox http://localhost:3000/
 ```
 
@@ -62,6 +64,12 @@ cd frontend
 npm install
 tsc
 npm start
+```
+
+Start web browser.
+
+```
+firefox http://localhost:3000/
 ```
 
 # Features
