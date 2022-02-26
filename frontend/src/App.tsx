@@ -8,7 +8,7 @@ import { endpoint } from './endpoint'
 const makePath = (...pieces: string[]): string => {
   let output = "";
   for (const piece of pieces) {
-    if (output.length > 0) {
+    if (output.length > 0 && output[output.length - 1] != "/") {
       output += "/";
     }
     output += piece;
@@ -41,32 +41,32 @@ function Directory(props: DirectoryProps) {
           files: res.files
           }));
       }, (err) => {
-        console.log("Failed to fetch directory state.");
       });
+  };
+
+  // Listen to SSE events.
+  const addWatcher = () => {
+    if (props.watchDirectory) {
+      // TODO it should work when a file C in A/B/C changed. Currently, only A is watched.
+      const source = new EventSource(`${endpoint}/directories/${directoryURIComponent}/watch`);
+      source.onmessage = () => {
+        setExpectedVersion((prevState) => prevState + 1);
+      };
+    }
   };
 
   if (!state.collapsed && (actualVersion < expectedVersion)) {
     fetchState();
     setActualVersion(expectedVersion);
+    addWatcher();
   }
-
-  // Listen to SSE events.
-  useEffect(() => {
-    if (props.watchDirectory) {
-      // TODO it should work when a file C in A/B/C changed. Currently, only A is watched.
-      const source = new EventSource(`${endpoint}/directories/${directoryURIComponent}/watch`);
-      source.onmessage = () => {
-        setExpectedVersion(expectedVersion + 1);
-      };
-    }
-  }, []);
 
   const listItems = state.collapsed ? "" : state.files.map((fileInfo: FileInfo) => {
     const fileName = fileInfo.fileName;
     const isDir: boolean = fileInfo.isDirectory;
 
     if (isDir) {
-      return <li key={fileName}><Directory prefixPath={directoryPath} filePath={fileName} files={[]} watchDirectory={false} /></li>;
+      return <li key={fileName}><Directory prefixPath={directoryPath} filePath={fileName} files={[]} watchDirectory={true} /></li>;
     }
     return <li key={fileName}>{fileName}</li>
   });
