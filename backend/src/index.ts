@@ -78,14 +78,38 @@ app.get('/directories/:path/watch', async (req, res) => {
   });
 });
 
-let watchedDirectories = new stream.PassThrough({objectMode: true});
+interface Subscriber {
+  id: number;
+  res: express.Response;
+};
+
+let subscribers: Subscriber[] = [];
+
+let watchedDirectories: string[] = [];
 
 app.post('/directories/:path/watch', async (req, res) => {
-  const filePath: string = req.params.path;
-  watchedDirectories.write(filePath);
+  const watchedDirectory: string = req.params.path;
+
+  if (watchedDirectories.indexOf(watchedDirectory) !== -1) {
+    res.write(JSON.stringify({ok: true}));
+    res.end();
+    return;
+  }
+
+  watchedDirectories.push(watchedDirectory);
+
+  fs.watch((watchedDirectory), (eventType: string, filename: string | Buffer ) => {
+    // distribute the event to all subscribers.
+    for (let subscriber of subscribers) {
+      subscriber.res.write(`data: ${JSON.stringify({directoryPath: watchedDirectory, fileName: filename})}\n\n`);
+    }
+  });
+
   res.write(JSON.stringify({ok: true}));
   res.end();
 });
+
+let nextSubscriber: number = 0;
 
 app.get('/events', async (req, res) => {
 
@@ -93,19 +117,12 @@ app.get('/events', async (req, res) => {
   res.setHeader('Cache-Control', 'no-cache');
   res.flushHeaders();
 
-  let watching: string[] = [];
+  const subscriberId = nextSubscriber++;
 
-  for await (const watchedDirectory of watchedDirectories) {
-    if (watching.indexOf(watchedDirectory) !== -1) {
-      continue;
-    }
-    watching.push(watchedDirectory);
-    fs.watch((watchedDirectory), (eventType: string, filename: string | Buffer ) => {
-      res.write(`data: ${JSON.stringify({directoryPath: watchedDirectory, fileName: filename})}\n\n`);
-    });
-  }
+  subscribers.push({id: subscriberId, res: res});
 
   res.on('close', () => {
+    subscribers = subscribers.filter((x) => x.id !== subscriberId);
     res.end();
   });
 

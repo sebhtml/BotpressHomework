@@ -44,7 +44,6 @@ function Directory(props: DirectoryProps) {
       });
   };
 
-  // Listen to SSE events.
   const addWatcher = async () => {
     if (props.watchDirectory) {
       const rawResponse = await fetch(`${endpoint}/directories/${directoryURIComponent}/watch`,
@@ -110,15 +109,14 @@ function Directories(props: any) {
       directories: []
     });
 
-/*
-    let source = new EventSource(`${endpoint}/watch`);
+    // Listen to SSE events.
+    let source = new EventSource(`${endpoint}/events`);
     source.onmessage = (event) => {
       const directoryPath: string = JSON.parse(event.data).directoryPath;
-      console.log("directory " + directoryPath + " changed");
+      console.log("Got event for " + directoryPath);
     };
-*/
 
-    fetch(endpoint + "/directories")
+    fetch(`${endpoint}/directories`)
       .then((response) => {
         const payload = response.json();
         return payload;
