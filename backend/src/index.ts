@@ -1,4 +1,5 @@
 import express from 'express';
+import stream from 'stream';
 import cors from 'cors';
 import path from 'path';
 import fs from 'fs';
@@ -77,15 +78,12 @@ app.get('/directories/:path/watch', async (req, res) => {
   });
 });
 
-let watchedDirectories: string[] = [];
-let watchedDirectoriesActive: string [];
+let watchedDirectories = new stream.PassThrough({objectMode: true});
 
 app.post('/directories/:path/watch', async (req, res) => {
   const filePath: string = req.params.path;
-  if (watchedDirectories.indexOf(filePath) === -1) {
-    watchedDirectories.push(filePath);
-  }
-  res.write(JSON.stringify({watchedDirectories: watchedDirectories}));
+  watchedDirectories.write(filePath);
+  res.write(JSON.stringify({ok: true}));
   res.end();
 });
 
@@ -96,9 +94,15 @@ app.get('/watch', async (req, res) => {
   res.setHeader('Cache-Control', 'no-cache');
   res.flushHeaders();
 
-  for (const watchedDirectory of watchedDirectories) {
-    fs.watch((watchedDirectory), (eventType, filename) => {
-        res.write(`data: ${JSON.stringify({directorypath: watchedDirectory})}\n\n`);
+  let watching: string[] = [];
+
+  for await (const watchedDirectory of watchedDirectories) {
+    if (watching.indexOf(watchedDirectory) !== -1) {
+      continue;
+    }
+    watching.push(watchedDirectory);
+    fs.watch((watchedDirectory), (eventType: string, filename: string | Buffer ) => {
+      res.write(`data: ${JSON.stringify({directorypath: watchedDirectory, fileName: filename})}\n\n`);
     });
   }
 
