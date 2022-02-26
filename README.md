@@ -9,11 +9,11 @@ BH is developed with love on Debian GNU/Linux 11 (bullseye) using vim, Google Se
 
 | *Resource* | *URN (Uniform Resource Name)* | *HTTP verb* | *Description* | *Note* |
 | --- | --- | --- | --- | --- |
-| Directory | `/directories` | GET | Get list of directories. | This list contains directories passed as command-line argument when starting the backend. |
-| Directory | `/directories/{directory}` | GET | Get content of a directory. | Return directory content |
+| Directory | `/directories` | GET | Get list of directories. | This list contains directories passed as command-line arguments when starting the backend. |
+| Directory | `/directories/{directory}` | GET | Get content of a directory. | Return directory content. |
 | Directory | `/directories/{directory}/watch` | POST | Add a directory to the watch list. | Idempotent if the same directory is watched many times. |
-| Directory | `/events`             | GET  | Get events for directory changes | Supports many subscribers. Uses Server-Sent Events (SSE) |
-| Directory | `/directories/{directory}/watch` | GET | Watch changes in a directory using server sent events (SSE).  | Deprecated ! Most web browsers allow for a few persistent connections. Firefox 91.6.0esr has max-persistent-connections of 6 by default) |
+| Directory | `/events`             | GET  | Get events for directory changes | Supports many subscribers. Uses Server-Sent Events (SSE). |
+| Directory | `/directories/{directory}/watch` | GET | Watch changes in a directory using Server-Sent Events (SSE).  | Deprecated ! Most web browsers allow for a few persistent connections. Firefox 91.6.0esr has max-persistent-connections of 6 by default. |
 
 
 # Building instructions (with Docker)
