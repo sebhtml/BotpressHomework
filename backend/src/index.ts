@@ -15,58 +15,66 @@ app.use(
   cors()
 );
 
-app.get("/directories", (req: express.Request, res: express.Response) => {
+app.get("/directories", async (req: express.Request, res: express.Response) => {
   res.write(JSON.stringify({
     directories: [...process.argv].splice(2)
   }));
   res.end();
 });
 
-app.get('/directories/:path', (req, res) => {
+app.get('/directories/:path', async (req, res) => {
   const filePath: string = req.params.path;
 
-  fs.readdir(filePath, (err, files) => {
-    if (err) {
-      return console.log("unable to read directory " + err);
-    }
+  const promise = fs.promises.readdir(filePath);
+  await promise;
 
-    const fileData: FileInfo[] = files.map((file) => ({
+  promise.then(async (files) => {
+    const fileDataPromises: Promise<FileInfo>[] = await files.map(async (file): Promise<FileInfo>  => ({
       fileName: file,
-      isDirectory: fs.lstatSync(path.join(filePath, file)).isDirectory()
+      isDirectory: (await fs.promises.lstat(path.join(filePath, file))).isDirectory()
     }));
 
-    res.write(JSON.stringify({
-      filePath: filePath,
-      files: fileData
-    }));
+    Promise.all(fileDataPromises).then((fileData) => {
+      res.write(JSON.stringify({
+        filePath: filePath,
+        files: fileData
+      }));
+      res.end();
+    }).catch((err) => {
+      console.log(err);
+    });
 
-    res.end();
+  }).catch((err) => {
+    console.log("unable to read directory " + err);
   });
 });
 
 
-app.get('/directories/:path/watch', (req, res) => {
+app.get('/directories/:path/watch', async (req, res) => {
 
   const filePath: string = req.params.path;
 
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
   res.flushHeaders();
+  try {
+    async function* getChanges() {
+      let watcher = fs.promises.watch(filePath);
+      for await (const event of watcher) {
+        yield event.filename;
+      }
+    };
 
-  fs.watch(filePath, (event, fileName) => {
-    if (fileName) {
-      const data = {
-        filePath: filePath
-      };
-      // The \n\n is necessary to force a flush.
-      res.write(`data: ${JSON.stringify(data)}\n\n`);
+    for await (const fileName of getChanges()) {
+      res.write(`data: ${JSON.stringify(fileName)}\n\n`);
     }
-  });
+  } catch (err) {
+    res.end()
+  }
 
   res.on('close', () => {
     res.end();
   });
-
 });
 
 app.listen(4000, () => {
