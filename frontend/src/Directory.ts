@@ -4,8 +4,7 @@ import { endpoint } from './endpoint'
 interface DirectoryProps {
   prefixPath: string;
   filePath: string;
-  files: string[];
-  watchDirectory: boolean;
+  expectedVersion: number;
 }
 
 // TODO: move FileInfo to a common module and use import it in the frontend and backend.

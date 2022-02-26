@@ -28,6 +28,10 @@ function Directory(props: DirectoryProps) {
   const [actualVersion, setActualVersion] = useState(0);
   const [expectedVersion, setExpectedVersion] = useState(actualVersion + 1);
 
+  if (expectedVersion !== props.expectedVersion) {
+    setExpectedVersion(props.expectedVersion);
+  }
+
   const directoryPath = makePath(state.prefixPath, state.filePath);
   const directoryURIComponent = encodeURIComponent(directoryPath);
 
@@ -45,17 +49,15 @@ function Directory(props: DirectoryProps) {
   };
 
   const addWatcher = async () => {
-    if (props.watchDirectory) {
-      const rawResponse = await fetch(`${endpoint}/directories/${directoryURIComponent}/watch`,
-      {
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        method: "POST",
-        body: JSON.stringify({watch: true})
-      });
-    }
+    const rawResponse = await fetch(`${endpoint}/directories/${directoryURIComponent}/watch`,
+    {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      method: "POST",
+      body: JSON.stringify({watch: true})
+    });
   };
 
   if (!state.collapsed && (actualVersion < expectedVersion)) {
@@ -69,7 +71,7 @@ function Directory(props: DirectoryProps) {
     const isDir: boolean = fileInfo.isDirectory;
 
     if (isDir) {
-      return <li key={fileName}><Directory prefixPath={directoryPath} filePath={fileName} files={[]} watchDirectory={true} /></li>;
+      return <li key={fileName}><Directory prefixPath={directoryPath} filePath={fileName} expectedVersion={expectedVersion} /></li>;
     }
     return <li key={fileName}>{fileName}</li>
   });
@@ -131,8 +133,9 @@ function Directories(props: any) {
   }, []);
 
   const elements = state.directories.map((directory) => {
-      return <div key={directory} className="App-directory-panel"><Directory prefixPath={""} filePath={directory} files={[]} watchDirectory={true} /></div>;
-      });
+    const expectedVersion = 1;
+    return <div key={directory} className="App-directory-panel"><Directory prefixPath={""} filePath={directory} expectedVersion={expectedVersion} /></div>;
+  });
 
   // Sadly, HTML tags <marquee> and <blink> don't exist in ReactJS :-(
   const important = <div><div >IMPORTANT !</div></div>;
