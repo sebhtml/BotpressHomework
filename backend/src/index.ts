@@ -87,7 +87,7 @@ app.post('/directories/:path/watch', async (req, res) => {
   res.end();
 });
 
-app.get('/watch', async (req, res) => {
+app.get('/events', async (req, res) => {
 
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');

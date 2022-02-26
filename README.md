@@ -34,7 +34,7 @@ BH has the following extraordinary features that every venture capitalist is loo
 | Directory | `/directories/{directory}` | GET | Get content of a directory. |
 | Directory | `/directories/{directory}/watch` | GET | Watch changes in a directory using server sent events (SSE). (deprecated!) |
 | Directory | `/directories/{directory}/watch` | POST | Add a directory to the watch list. |
-| Directory | `/watch`             | GET  | Get events for directory changes |
+| Directory | `/events`             | GET  | Get events for directory changes |
 
 endpoint
 # Building instructions

@@ -8,7 +8,7 @@ import { endpoint } from './endpoint'
 const makePath = (...pieces: string[]): string => {
   let output = "";
   for (const piece of pieces) {
-    if (output.length > 0 && output[output.length - 1] != "/") {
+    if (output.length > 0 && output[output.length - 1] !== "/") {
       output += "/";
     }
     output += piece;
@@ -56,9 +56,6 @@ function Directory(props: DirectoryProps) {
         method: "POST",
         body: JSON.stringify({watch: true})
       });
-      //source.onmessage = () => {
-        //setExpectedVersion((prevState) => prevState + 1);
-      //};
     }
   };
 
@@ -112,6 +109,15 @@ function Directories(props: any) {
     setState({
       directories: []
     });
+
+/*
+    let source = new EventSource(`${endpoint}/watch`);
+    source.onmessage = (event) => {
+      const directoryPath: string = JSON.parse(event.data).directoryPath;
+      console.log("directory " + directoryPath + " changed");
+    };
+*/
+
     fetch(endpoint + "/directories")
       .then((response) => {
         const payload = response.json();
