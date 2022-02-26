@@ -8,7 +8,7 @@ BH is developed with love on Debian GNU/Linux 11 (bullseye) using vim, docker, a
 # REST API
 
 | *Resource* | *URN (Uniform Resource Name)* | *HTTP verb* | *Note* | *Description* |
-| --- | --- | --- | --- |
+| --- | --- | --- | --- | --- |
 | Directory | `/directories` | GET | Get list of directories. | This list contains directories passed as command-line argument when starting the backend. |
 | Directory | `/directories/{directory}` | GET | Get content of a directory. | Return directory content |
 | Directory | `/directories/{directory}/watch` | POST | Add a directory to the watch list. | Idempotent if the same directory is watched many times. |
