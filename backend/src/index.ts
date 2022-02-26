@@ -89,7 +89,6 @@ app.post('/directories/:path/watch', async (req, res) => {
 
 app.get('/watch', async (req, res) => {
 
-  console.log(JSON.stringify(watchedDirectories));
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
   res.flushHeaders();
@@ -102,7 +101,7 @@ app.get('/watch', async (req, res) => {
     }
     watching.push(watchedDirectory);
     fs.watch((watchedDirectory), (eventType: string, filename: string | Buffer ) => {
-      res.write(`data: ${JSON.stringify({directorypath: watchedDirectory, fileName: filename})}\n\n`);
+      res.write(`data: ${JSON.stringify({directoryPath: watchedDirectory, fileName: filename})}\n\n`);
     });
   }
 
