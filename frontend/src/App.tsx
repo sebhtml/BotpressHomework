@@ -45,13 +45,20 @@ function Directory(props: DirectoryProps) {
   };
 
   // Listen to SSE events.
-  const addWatcher = () => {
+  const addWatcher = async () => {
     if (props.watchDirectory) {
-      // TODO it should work when a file C in A/B/C changed. Currently, only A is watched.
-      const source = new EventSource(`${endpoint}/directories/${directoryURIComponent}/watch`);
-      source.onmessage = () => {
-        setExpectedVersion((prevState) => prevState + 1);
-      };
+      const rawResponse = await fetch(`${endpoint}/directories/${directoryURIComponent}/watch`,
+      {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        method: "POST",
+        body: JSON.stringify({watch: true})
+      });
+      //source.onmessage = () => {
+        //setExpectedVersion((prevState) => prevState + 1);
+      //};
     }
   };
 

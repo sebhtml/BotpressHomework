@@ -25,10 +25,8 @@ app.get("/directories", async (req: express.Request, res: express.Response) => {
 app.get('/directories/:path', async (req, res) => {
   const filePath: string = req.params.path;
 
-  const promise = fs.promises.readdir(filePath);
-  await promise;
-
-  promise.then(async (files) => {
+  fs.promises.readdir(filePath)
+  .then(async (files) => {
     const fileDataPromises: Promise<FileInfo>[] = await files.map(async (file): Promise<FileInfo>  => ({
       fileName: file,
       isDirectory: (await fs.promises.lstat(path.join(filePath, file))).isDirectory()
@@ -40,12 +38,14 @@ app.get('/directories/:path', async (req, res) => {
         files: fileData
       }));
       res.end();
-    }).catch((err) => {
+    }, (err) => {
       console.log(err);
+      res.end();
     });
 
-  }).catch((err) => {
+  }, (err) => {
     console.log("unable to read directory " + err);
+      res.end();
   });
 });
 
@@ -75,6 +75,37 @@ app.get('/directories/:path/watch', async (req, res) => {
   res.on('close', () => {
     res.end();
   });
+});
+
+let watchedDirectories: string[] = [];
+let watchedDirectoriesActive: string [];
+
+app.post('/directories/:path/watch', async (req, res) => {
+  const filePath: string = req.params.path;
+  if (watchedDirectories.indexOf(filePath) === -1) {
+    watchedDirectories.push(filePath);
+  }
+  res.write(JSON.stringify({watchedDirectories: watchedDirectories}));
+  res.end();
+});
+
+app.get('/watch', async (req, res) => {
+
+  console.log(JSON.stringify(watchedDirectories));
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.flushHeaders();
+
+  for (const watchedDirectory of watchedDirectories) {
+    fs.watch((watchedDirectory), (eventType, filename) => {
+        res.write(`data: ${JSON.stringify({directorypath: watchedDirectory})}\n\n`);
+    });
+  }
+
+  res.on('close', () => {
+    res.end();
+  });
+
 });
 
 app.listen(4000, () => {
