@@ -120,7 +120,15 @@ function Directories(props: any) {
     let source = new EventSource(`${endpoint}/events`);
     source.onmessage = (event) => {
       const directoryPath: string = JSON.parse(event.data).directoryPath;
-      console.log("Got event for " + directoryPath);
+      setState((prevState) => {
+        let newState = { ...prevState };
+        for (let directoryVersion of newState.directories) {
+          if (directoryPath.startsWith(directoryVersion.directoryName)) {
+            ++directoryVersion.expectedVersion;
+          }
+        }
+        return newState;
+      });
     };
 
     fetch(`${endpoint}/directories`)
